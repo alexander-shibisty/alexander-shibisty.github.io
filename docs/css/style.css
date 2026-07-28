@@ -91,6 +91,10 @@ h6 {
   font-size: inherit;
 }
 
+body {
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+}
 .lock body {
   overflow: hidden;
   -ms-touch-action: none;
@@ -98,6 +102,13 @@ h6 {
   -ms-scroll-chaining: none;
       overscroll-behavior: none;
 }
+@media (min-width: 1024) {
+  body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 .wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -868,6 +879,17 @@ html {
 
 .card-section-left {
   margin-right: 1.5rem;
+}
+
+.cart-right {
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+}
+@media (min-width: 1024) {
+  .cart-right {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 .tippy-box[data-animation=fade][data-state=hidden] {
   opacity: 0;

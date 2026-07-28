@@ -327,3 +327,13 @@ html {
   margin-right: rem(24);
 }
 //====================================================================================================
+
+.cart-right {
+  padding-left: rem(15);
+  padding-right: rem(15);
+
+  @media (min-width: 1024) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
