@@ -1,0 +1,17 @@
+//====================================================================================================
+.header {
+  padding-bottom: 0;
+  padding-left: rem(15);
+  padding-right: rem(15);
+  border-bottom: rem(1) solid rgb(217, 217, 217);
+
+  @media (min-width: 1024) {
+    padding-left: rem(32);
+    padding-right: rem(32);
+    padding-bottom: rem(32);
+  }
+
+  .card-section {
+    border-bottom: none;
+  }
+}
