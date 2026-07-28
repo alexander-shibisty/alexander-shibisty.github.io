@@ -271,6 +271,11 @@ html {
   position: relative;
   background-color: var(--lightGray);
   border-radius: rem(16);
+  margin-top: rem(12);
+
+  &:first-child {
+    margin-top: 0px;
+  }
 }
 
 .title {

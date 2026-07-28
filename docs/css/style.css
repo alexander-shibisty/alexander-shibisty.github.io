@@ -795,6 +795,10 @@ html {
   position: relative;
   background-color: var(--lightGray);
   border-radius: 1rem;
+  margin-top: 0.75rem;
+}
+.linked-accounts:first-child {
+  margin-top: 0px;
 }
 
 .title {
