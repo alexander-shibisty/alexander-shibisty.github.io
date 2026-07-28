@@ -6,7 +6,7 @@ import CopyPlugin from "copy-webpack-plugin";
 import * as path from 'path';
 
 const srcFolder = "src";
-const builFolder = "dist";
+const builFolder = "docs";
 const rootFolder = path.basename(path.resolve());
 
 let pugPages = fs.readdirSync(srcFolder).filter(fileName => fileName.endsWith('.pug'))
@@ -56,7 +56,7 @@ const config = {
 		host: 'local-ip', // localhost
 
 		// Розкоментувати на слабкому ПК
-		// (в режимі розробника папка результатом (dist) буде створюватися на диску)
+		// (в режимі розробника папка результатом (docs) буде створюватися на диску)
 		/*
 		devMiddleware: {
 			writeToDisk: true,
