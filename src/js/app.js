@@ -202,3 +202,15 @@ import './libs/watcher.js'
 // import "./libs/dynamic_adapt.js";
 
 import './script.js'
+
+function updateTheme() {
+    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    document.body.dataset.theme = isDark ? "dark" : "light";
+}
+
+// Установить тему при загрузке
+updateTheme();
+
+// Отслеживать изменение системной темы
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateTheme);
