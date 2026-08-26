@@ -703,6 +703,12 @@ html {
   padding-top: 2rem;
 }
 
+@media (min-width: 700px) {
+  .content {
+    border-left: 1px solid rgb(217, 217, 217);
+  }
+}
+
 .cart-right {
   padding: 0.9375rem 0 0.9375rem 0;
   border-bottom: none;
@@ -710,7 +716,6 @@ html {
 @media (min-width: 700px) {
   .cart-right {
     padding: 2rem 2rem 2rem 2rem;
-    border-left: 1px solid rgb(217, 217, 217);
   }
 }
 .cart-right .card-section {

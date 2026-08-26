@@ -181,10 +181,15 @@ html {
   }
 }
 
+.content {
+  @media (min-width: 700px) {
+    border-left: 1px solid rgb(217, 217, 217);
+  }
+}
+
 .cart-right {
   @media (min-width: 700px) {
     padding: rem(32) rem(32) rem(32) rem(32);
-    border-left: 1px solid rgb(217, 217, 217);
   }
   padding: rem(15) 0 rem(15) 0;
   border-bottom: none;
