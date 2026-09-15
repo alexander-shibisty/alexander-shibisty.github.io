@@ -76,6 +76,7 @@
 		"webpack-stream": "latest"
 	},
 	"dependencies": {
+		"18": "^0.0.0",
 		"gulp-cheerio": "^1.0.0",
 		"isotope-layout": "^3.0.6",
 		"postcss-sort-media-queries": "^5.2.0",
