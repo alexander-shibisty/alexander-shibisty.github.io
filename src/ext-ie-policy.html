@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+@@include('html/_head.htm',{
+"title":"HomePage"
+})
+
+<body data-theme="light">
+	<div class="wrapper">
+		<main class="page">
+			<div class="container">
+				<div class="card">
+					@@include('html/_header.htm',{})
+					<section class="portfolio-grid-container gap-0 position-relative">
+						<div class="span-md-4">
+							<aside class="pt-0 cart-left">
+
+								<div class="card-section card-section__left">
+									<div class="ui-profile-summary-stats">
+										<div class="d-flex">
+											<!-- <div class="col-compact min-with-75">
+												<div class="stat-amount h5"><span>#80K+</span></div>
+												<div><span class="text-base-sm text-light">Total earnings</span></div>
+											</div> -->
+											<div class="col-compact min-with-75">
+												<div class="stat-amount h5"><span>33</span></div>
+												<div><span class="text-base-sm text-light">Total jobs</span></div>
+											</div>
+											<div class="col-compact min-with-75">
+												<div class="stat-amount h5"><span>3,775</span></div>
+												<div><span class="text-base-sm text-light">Total hours</span></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<section class="card-section card-section__left">
+									<div>
+										<div class="mb-3x d-flex align-items-center justify-space-between">
+											<h5 class="mb-0">
+												Hours per week
+											</h5>
+										</div>
+										<div>
+											<span>
+												More than 40 hrs/week
+											</span>
+										</div>
+										<div class="mt-3x mt-3x">
+											<span class="text-light">
+												Open to contract to hire
+											</span>
+											<!-- <div
+												class="portfolio-badge portfolio-badge-feature vertical-align-middle ml-2x portfolio-popper-trigger"
+												data-tippy-content="Find talent open to starting with a contract, and later explore a full-time option.">
+												New
+											</div> -->
+										</div>
+									</div>
+
+								</section>
+								<section class="card-section card-section__left">
+									<div>
+										<div class="mb-3x d-flex align-items-center justify-space-between">
+											<h5 class="mb-0">
+												Languages
+											</h5>
+										</div>
+										<div>
+											<ul class="features">
+												<li>English <span>Fluent</span></li>
+												<li>Russian <span>Native</span></li>
+												<li>Ukrainian <span>Native</span></li>
+											</ul>
+										</div>
+
+									</div>
+								</section>
+								<section class="card-section card-section__left">
+									@@include('html/_contacts.htm',{})
+								</section>
+							</aside>
+						</div>
+						<div class="span-12 span-md-8 content">
+							<div class="card-section cart-right">
+								<div class="mb-5x">
+									<div class="d-flex align-items-center justify-space-between">
+										<div>
+											<h2 class="mb-0 pt-lg-2x h4">Privacy policy</h2>
+										</div>
+									</div>
+								</div>
+								<div class="d-flex justify-space-between">
+									<div class="text-body text-light portfolio-line-clamp-wrapper" data-showmore>
+										<div class="text-pre-line">
+											Privacy Policy for "Embed Inserter"
+
+											Effective Date: August 26, 2026
+
+											1. Introduction
+											"Embed Inserter" is a browser extension designed to check the HTTP status codes of your bookmarks and help you manage them efficiently. We are committed to protecting your privacy. This Privacy Policy explains how our extension handles data.
+
+											2. Data Collection and Usage
+											We do NOT collect, store, or transmit any personal data, browsing history, or bookmark data to any external servers. All operations, including bookmark checking and status reporting, are performed entirely locally within your browser.
+
+											3. Use of Permissions
+											Our extension requests the following permissions from the Chrome browser, strictly for local functionality:
+											- bookmarks: To read your bookmark tree and check the HTTP status of the saved URLs.
+											- storage: To save your local preferences (e.g., theme, language, check intervals) and the UI state of the extension.
+											- tabs: To detect if the currently active tab's URL exists in your bookmarks and highlight it accordingly.
+											- sidePanel: To provide an optional, larger interface for easier bookmark management and searching.
+											- alarms: To schedule and perform periodic background checks of your bookmarks at your chosen interval, even when the extension popup is closed.
+											- host permissions: Required to make network requests to the bookmarked URLs to verify if the pages are still accessible.
+
+											4. Third-Party Services
+											This extension does not use any third-party analytics, tracking services, or external APIs. No data is shared with third parties.
+
+											5. Changes to This Policy
+											We may update this Privacy Policy from time to time. Any changes will be reflected in the "Effective Date" at the top of this page.
+
+											6. Contact Us
+											If you have any questions or concerns about this Privacy Policy, please contact us at: <a href="mailto:">shibisty.a@gmail.com</a>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+
+				</div>
+			</div>
+		</main>
+	</div>
+	@@include('html/_js.htm',{})
+</body>
+
+</html>
