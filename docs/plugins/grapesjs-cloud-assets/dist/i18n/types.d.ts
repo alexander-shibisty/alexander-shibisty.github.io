@@ -307,6 +307,52 @@ export interface CloudAssetsMessages {
         sessionNote: string;
     };
     /**
+     * Единственный из четырёх облачных провайдеров, которому нужен
+     * собственный сервер владельца сайта (`BoxProviderOptions.tokenEndpoint`) —
+     * у Box нет ни PKCE, ни implicit-flow, обмен на токен обязательно
+     * требует client_secret (проверено по документации developer.box.com,
+     * см. doc-комментарий `BoxProvider`/`BoxProviderOptions`).
+     */
+    box: {
+        setup: {
+            step1: string;
+            /** Объясняет, ЗАЧЕМ нужен свой сервер (tokenEndpoint) — то, чего нет у Dropbox/Google/OneDrive. */
+            step2Server: string;
+            step3: string;
+            /** Показывается, когда redirectUri определился автоматически — перед `copyValue`. */
+            step4WithRedirect: string;
+            /** Показывается, когда redirectUri определить не удалось. */
+            step4NoRedirect: string;
+            /** CORS Domains в консоли Box — показывается, когда origin определился автоматически — перед `copyValue`. */
+            step5WithOrigin: string;
+            /** Показывается, когда origin определить не удалось. */
+            step5NoOrigin: string;
+            step6: string;
+            step7: string;
+        };
+        error: {
+            /** {status} — HTTP-код ответа. */
+            exchangeCode: string;
+            requireClientId: string;
+            requireRedirectUri: string;
+            /** tokenEndpoint не задан (или пуст) в опциях BoxProvider. */
+            requireTokenEndpoint: string;
+            notConnected: string;
+            sessionExpired: string;
+            /** {status} — HTTP-код ответа собственного tokenEndpoint владельца сайта. */
+            refreshFailed: string;
+            /** Не удалось скачать файл для вставки — обычно CORS на dl.boxcloud.com, см. doc-комментарий `BoxProvider.resolve()`. {name} — имя файла. */
+            downloadFailed: string;
+            /** {maxMb} — предел размера файла для вставки без отдельного сервера-прокси для скачивания. */
+            fileTooLarge: string;
+            /** {status} — HTTP-код ответа. */
+            uploadFailed: string;
+            uploadNetworkError: string;
+        };
+        /** Заметка в "Подключённые аккаунты" — см. `ProviderSessionInfo.sessionNoteKey`/`BoxProvider.getSessionInfo`. */
+        sessionNote: string;
+    };
+    /**
      * Попап "Подключить S3" (см. `AssetBrowser.openConnectS3Modal`) и
      * ошибки самого `S3Provider`. В отличие от dropbox/google/microsoft
      * выше это не мастер настройки (`getSetupInfo`/`setCredential`) — у

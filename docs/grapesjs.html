@@ -68,15 +68,6 @@
             border-radius: 4px;
         }
     </style>
-	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-2DFLVTHT09"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-
-	  gtag('config', 'G-2DFLVTHT09');
-	</script>
 </head>
 
 <body>
@@ -153,6 +144,23 @@
      как и все плагины выше.
 -->
 <script src="/plugins/grapesjs-cloud-assets/dist/grapesjs-cloud-assets.umd.cjs"></script>
+
+<!--
+     grapesjs-sidebar-tools: наш плагин — разделённая панель Layers
+     (дерево слоёв сверху, вкладки Style Manager / Component Settings снизу).
+     UMD-сборка регистрирует саму функцию плагина как window.grapesjsSidebarTools.
+-->
+<script src="/plugins/grapesjs-sidebar-tools/dist/grapesjs-sidebar-tools.umd.cjs"></script>
+
+<!--
+     grapesjs-context-menu: наш плагин — меню по правому клику на холсте
+     и в Layer Manager + кликабельный бейдж иерархии над выделенным
+     элементом. UMD-сборка, как у cloud-assets: глобал
+     window.grapesjsContextMenu = { default: pluginFn, ... }.
+     Пункт "Просмотреть стили" запускает команду
+     layers-sidebar:show-styles из grapesjs-sidebar-tools.
+-->
+<script src="/plugins/grapesjs-context-menu/dist/grapesjs-context-menu.umd.cjs"></script>
 
 
 <!-- =========================================================
@@ -237,7 +245,19 @@ const editor = grapesjs.init({
          * функцию напрямую, а не строку. Так надёжнее в принципе:
          * никакой строковой сверки с window[...] вообще не нужно.
          */
-        grapesjsCloudAssets.default
+        grapesjsCloudAssets.default,
+
+        /*
+         * grapesjs-sidebar-tools: UMD-глобал — это сама функция
+         * плагина (не объект { default }), передаём её напрямую.
+         */
+        grapesjsSidebarTools,
+
+        /*
+         * grapesjs-context-menu: UMD-глобал — объект { default: pluginFn },
+         * как у cloud-assets. Язык меню берётся из editor.I18n (en/ru/uk).
+         */
+        grapesjsContextMenu.default
 
     ],
 
@@ -314,8 +334,29 @@ const editor = grapesjs.init({
             providers: [
                 new grapesjsCloudAssets.DropboxProvider(),
                 new grapesjsCloudAssets.GoogleDriveProvider(),
-                new grapesjsCloudAssets.OneDriveProvider()
+                new grapesjsCloudAssets.OneDriveProvider(),
+				new grapesjsCloudAssets.BoxProvider(),
             ]
+        },
+
+        /*
+         * Тексты grapesjs-sidebar-tools берутся из его собственных
+         * переводов (22 языка, как у ядра GrapesJS) по локали редактора —
+         * по умолчанию это язык браузера. Чтобы зафиксировать свои
+         * подписи для всех языков, передайте, например:
+         *   labels: { styleManagerTab: 'Стили' }
+         */
+        [grapesjsSidebarTools]: {},
+
+        /*
+         * Все опции необязательные, здесь — значения по умолчанию.
+         */
+        [grapesjsContextMenu.default]: {
+            blocks: null,            // null = все блоки в "Добавить элемент"
+            canvasMenu: true,        // ПКМ на холсте
+            layersMenu: true,        // ПКМ в Layer Manager
+            hierarchyBadge: true,    // бейдж "Имя ▾" над выделенным элементом
+            viewStylesCommand: 'layers-sidebar:show-styles' // команда grapesjs-sidebar-tools
         }
 
     },

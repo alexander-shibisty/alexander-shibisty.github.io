@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>GrapesJS — Layers Context Menu + плагины из index.html</title>
+<link rel="stylesheet" href="https://unpkg.com/grapesjs@0.21.13/dist/css/grapes.min.css">
+<link rel="stylesheet" href="https://unpkg.com/grapick@0.1.13/dist/grapick.min.css">
+<style>
+  html, body { margin: 0; height: 100%; background: #16151a; font-family: sans-serif; }
+  #gjs { height: 100vh; margin-right: 320px; }
+  .demo-section { padding: 60px 0; border-top: 1px dashed #d8dee6; }
+  .demo-section .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 30px; }
+  .demo-tag { display: inline-block; margin-bottom: 18px; padding: 4px 10px; font-size: 12px; font-weight: 700;
+    letter-spacing: .04em; text-transform: uppercase; color: #fff; background: #4b5563; border-radius: 4px; }
+
+  .sidebar {
+    position: fixed; top: 0; right: 0; width: 320px; height: 100vh; z-index: 10;
+    background: #2a2930; border-left: 1px solid rgba(255,255,255,.08);
+    display: flex; flex-direction: column; color: #ddd;
+  }
+  .sidebar-options, .sidebar-tabs { display: flex; flex: 0 0 auto; flex-wrap: wrap; }
+  .sidebar-options { background: #3a3941; }
+  .sidebar-options .gjs-pn-btn { padding: 8px 10px; color: #ddd; cursor: pointer; font-size: 13px; }
+  .sidebar-options .gjs-pn-btn.gjs-pn-active { color: #f0a; }
+  .sidebar-tabs .gjs-pn-btn {
+    flex: 1; padding: 10px 0; color: #aaa; cursor: pointer; font-size: 12px;
+    border-bottom: 2px solid transparent; text-align: center;
+  }
+  .sidebar-tabs .gjs-pn-btn.gjs-pn-active { color: #fff; border-bottom-color: #3b97e3; }
+  .sidebar-body { flex: 1 1 auto; min-height: 0; position: relative; }
+  .tab-panel { display: none; height: 100%; overflow: auto; }
+  .tab-panel.active { display: block; }
+  #tab-layers { overflow: hidden; }
+  #layers { height: 100%; }
+</style>
+</head>
+<body>
+  <div id="gjs"></div>
+
+  <!-- Панель опций (в т.ч. кнопка «код» </>) + глобальные табы.
+       Каждый менеджер живёт в СВОЕЙ вкладке; блоки — только во вкладке «Компоненты». -->
+  <div class="sidebar">
+    <div class="sidebar-options"></div>
+    <div class="sidebar-tabs"></div>
+    <div class="sidebar-body">
+      <div class="tab-panel active" id="tab-styles"><div id="styles"></div></div>
+      <div class="tab-panel" id="tab-traits"><div id="traits"></div></div>
+      <div class="tab-panel" id="tab-layers"><div id="layers"></div></div>
+      <div class="tab-panel" id="tab-blocks"><div id="blocks"></div></div>
+    </div>
+  </div>
+
+<!-- CORE + плагины: те же версии, что в index.html -->
+<script src="https://unpkg.com/grapesjs@0.21.13/dist/grapes.min.js"></script>
+<script src="https://unpkg.com/grapesjs-preset-webpage@1.0.3/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-blocks-basic@1.0.2/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-plugin-forms@2.0.6/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-navbar@1.0.2/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-tabs@1.0.6/dist/grapesjs-tabs.min.js"></script>
+<script src="https://unpkg.com/grapesjs-component-countdown@1.0.2/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-custom-code@1.0.2/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-tooltip@0.1.8/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-typed@2.0.1/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-parser-postcss@1.0.3/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-style-gradient@3.0.3/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-style-bg@2.0.2/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-style-filter@1.0.2/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-plugin-export@1.0.12/dist/index.js"></script>
+<script src="https://unpkg.com/grapesjs-tui-image-editor@1.0.2/dist/index.js"></script>
+<!-- ваш плагин cloud-assets; путь как в index.html. Нет файла — просто пропускаем. -->
+<script src="/plugins/grapesjs-cloud-assets/dist/grapesjs-cloud-assets.umd.cjs" onerror="console.warn('cloud-assets не найден — пропускаем')"></script>
+
+<!-- наши два плагина: сайдбар (слои/стили/настройки) и контекстное меню -->
+<script src="grapesjs-layers-sidebar.js"></script>
+<script src="grapesjs-layers-context-menu.js"></script>
+
+<script>
+const hasCloud = typeof grapesjsCloudAssets !== 'undefined';
+
+const editor = grapesjs.init({
+    container: '#gjs',
+    height: '100vh',
+    width: 'auto',
+    storageManager: false,
+    telemetry: false,
+
+    // Свои панели; preset-webpage добавит в 'options' свои кнопки (импорт и т.д.)
+    panels: {
+        defaults: [
+            {
+                id: 'options',
+                el: '.sidebar-options',
+                buttons: [
+                    { id: 'sw-visibility', label: '▢', command: 'sw-visibility', context: 'sw-visibility', active: true, attributes: { title: 'Показать границы' } },
+                    { id: 'preview', label: '👁', command: 'preview', context: 'preview', attributes: { title: 'Просмотр' } },
+                    { id: 'fullscreen', label: '⛶', command: 'fullscreen', context: 'fullscreen', attributes: { title: 'Полный экран' } },
+                    { id: 'export-template', label: '</>', command: 'export-template', attributes: { title: 'Посмотреть код' } },
+                ],
+            },
+            {
+                id: 'views',
+                el: '.sidebar-tabs',
+                buttons: [
+                    { id: 'open-sm', label: 'Стили', command: 'open-sm', active: true, togglable: false },
+                    { id: 'open-tm', label: 'Настройки', command: 'open-tm', togglable: false },
+                    { id: 'open-layers', label: 'Слои', command: 'open-layers', togglable: false },
+                    { id: 'open-blocks', label: 'Компоненты', command: 'open-blocks', togglable: false },
+                ],
+            },
+        ],
+    },
+
+    blockManager: { appendTo: '#blocks' },
+    layerManager: { appendTo: '#layers' },
+    styleManager: { appendTo: '#styles' },
+    traitManager: { appendTo: '#traits' },
+
+    plugins: [
+
+        'grapesjs-preset-webpage',
+
+        'gjs-blocks-basic',
+
+        'grapesjs-plugin-forms',
+
+        'grapesjs-navbar',
+
+        'grapesjs-tabs',
+
+        'grapesjs-component-countdown',
+
+        'grapesjs-custom-code',
+
+        'grapesjs-tooltip',
+
+        'grapesjs-typed',
+
+        'grapesjs-parser-postcss',
+
+        'grapesjs-style-gradient',
+
+        'grapesjs-style-bg',
+
+        'grapesjs-style-filter',
+
+        'grapesjs-plugin-export',
+
+        'grapesjs-tui-image-editor',
+
+        /*
+         * grapesjs-cloud-assets собран в UMD как объект
+         * { default: pluginFn, DropboxProvider }, а не под именем
+         * window['grapesjs-cloud-assets'] — поэтому передаём саму
+         * функцию напрямую, а не строку. Так надёжнее в принципе:
+         * никакой строковой сверки с window[...] вообще не нужно.
+         */
+        ...(hasCloud ? [grapesjsCloudAssets.default] : [])
+
+    
+    ],
+
+    pluginsOpts: {
+
+        'grapesjs-preset-webpage': {
+            blocks: ['link-block', 'quote', 'text-basic'],
+            modalImportTitle: 'Импорт кода',
+            modalImportButton: 'Импортировать',
+            modalImportLabel: 'Вставьте сюда HTML/CSS для импорта в холст',
+            modalImportContent: editor => editor.getHtml() + '<style>' + editor.getCss() + '</style>'
+        },
+
+        'gjs-blocks-basic': {
+            flexGrid: true
+        },
+
+        'grapesjs-plugin-forms': {
+            blocks: [
+                'form',
+                'input',
+                'textarea',
+                'select',
+                'checkbox',
+                'radio',
+                'button'
+            ]
+        },
+
+        'grapesjs-navbar': {},
+
+        'grapesjs-tabs': {},
+
+        'grapesjs-component-countdown': {
+            startTime: '2027-01-01 00:00'
+        },
+
+        'grapesjs-custom-code': {},
+
+        'grapesjs-tooltip': {},
+
+        'grapesjs-typed': {},
+
+        'grapesjs-parser-postcss': {},
+
+        'grapesjs-style-gradient': {},
+
+        'grapesjs-style-bg': {},
+
+        'grapesjs-style-filter': {},
+
+        'grapesjs-plugin-export': {
+            btnLabel: 'Экспорт в ZIP'
+        },
+
+        'grapesjs-tui-image-editor': {},
+
+        /*
+         * Ни один из трёх провайдеров не принимает App Key/Client ID
+         * здесь в коде — ни у одного облачного провайдера нет общего
+         * ключа, который работал бы на произвольном чужом домене без
+         * предрегистрации, так что зашитый здесь ключ всё равно не
+         * подошёл бы стороннему сайту, который просто поставит этот
+         * плагин. Вместо этого при первом открытии вкладки провайдера
+         * в Asset Manager плагин сам показывает пошаговый мастер
+         * настройки (ссылка на консоль провайдера, нужные scopes,
+         * origin/redirect URI — подставляется автоматически, где
+         * применимо) и поле для ввода своего ключа. Ключ сохраняется
+         * в localStorage браузера — мастер не будет показан повторно,
+         * пока его не сбросить кнопкой "Изменить ключ".
+         */
+        ...(hasCloud ? { [grapesjsCloudAssets.default]: {
+            providers: [
+                new grapesjsCloudAssets.DropboxProvider(),
+                new grapesjsCloudAssets.GoogleDriveProvider(),
+                new grapesjsCloudAssets.OneDriveProvider()
+            ]
+        } } : {})
+
+    },
+
+    deviceManager: {
+
+        devices: [
+
+            {
+                id: 'desktop',
+
+                name: 'Desktop',
+
+                width: ''
+
+            },
+
+            {
+                id: 'tablet',
+
+                name: 'Tablet',
+
+                width: '768px',
+
+                widthMedia: '992px'
+
+            },
+
+            {
+                id: 'mobile',
+
+                name: 'Mobile',
+
+                width: '375px',
+
+                widthMedia: '767px'
+
+            }
+
+        ]
+
+    },
+
+    components: `
+
+        <header class="header">
+
+            <div class="container">
+
+                <nav>
+
+                    <a href="#" class="logo">
+                        My Website
+                    </a>
+
+                    <div class="menu">
+
+                        <a href="#">
+                            Home
+                        </a>
+
+                        <a href="#">
+                            About
+                        </a>
+
+                        <a href="#">
+                            Contact
+                        </a>
+
+                    </div>
+
+                </nav>
+
+            </div>
+
+        </header>
+
+
+        <main>
+
+            <section class="hero">
+
+                <div class="container">
+
+                    <h1>
+                        GrapesJS
+                    </h1>
+
+                    <p>
+                        Visual Web Builder — со всеми официальными
+                        бесплатными плагинами.
+                    </p>
+
+                    <button>
+                        Get Started
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <section>
+
+                <div class="container">
+
+                    <h2>
+                        Features
+                    </h2>
+
+                    <div class="grid">
+
+                        <div>
+
+                            <h3>
+                                Blocks
+                            </h3>
+
+                            <p>
+                                Drag and drop components.
+                            </p>
+
+                        </div>
+
+
+                        <div>
+
+                            <h3>
+                                Responsive
+                            </h3>
+
+                            <p>
+                                Desktop, tablet and mobile.
+                            </p>
+
+                        </div>
+
+
+                        <div>
+
+                            <h3>
+                                Styling
+                            </h3>
+
+                            <p>
+                                Full CSS Style Manager: gradient,
+                                background, filters.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <img
+                        src="https://picsum.photos/800/500"
+                        alt="Demo image"
+                        style="max-width:100%;margin-top:40px;border-radius:8px;"
+                    >
+
+                    <p style="color:#666;font-size:14px;">
+                        ↑ Дважды кликните по картинке — откроется
+                        TOAST UI Image Editor.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <footer>
+
+            <div class="container">
+
+                Footer
+                &middot;
+                Используйте кнопку "Export ZIP" и "Импорт" на
+                верхней панели, чтобы проверить экспорт/импорт кода.
+
+            </div>
+
+        </footer>
+
+    `,
+
+    style: `
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            color: #222;
+
+        }
+
+
+        .container {
+
+            width: 100%;
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding:
+                0 30px;
+
+        }
+
+
+        .header {
+
+            padding:
+                20px 0;
+
+            border-bottom:
+                1px solid #ddd;
+
+        }
+
+
+        nav {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+        }
+
+
+        .logo {
+
+            font-size:
+                22px;
+
+            font-weight:
+                700;
+
+            color:
+                #222;
+
+            text-decoration:
+                none;
+
+        }
+
+
+        .menu {
+
+            display: flex;
+
+            gap:
+                20px;
+
+        }
+
+
+        .menu a {
+
+            color:
+                #222;
+
+            text-decoration:
+                none;
+
+        }
+
+
+        .hero {
+
+            padding:
+                120px 0;
+
+            text-align:
+                center;
+
+            background:
+                #f3f4f6;
+
+        }
+
+
+        .hero h1 {
+
+            margin:
+                0 0 20px;
+
+            font-size:
+                56px;
+
+        }
+
+
+        .hero p {
+
+            font-size:
+                20px;
+
+            margin:
+                0 0 30px;
+
+        }
+
+
+        button {
+
+            padding:
+                12px 24px;
+
+            border:
+                0;
+
+            border-radius:
+                6px;
+
+            background:
+                #222;
+
+            color:
+                white;
+
+            cursor:
+                pointer;
+
+        }
+
+
+        section {
+
+            padding:
+                80px 0;
+
+        }
+
+
+        .grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap:
+                30px;
+
+        }
+
+
+        footer {
+
+            padding:
+                50px 0;
+
+            background:
+                #111;
+
+            color:
+                white;
+
+        }
+
+    `
+});
+window.editor = editor;
+
+// Верхние табы = кнопки панели GrapesJS с командами; какая вкладка открыта,
+// запоминает и восстанавливает наш плагин.
+const showTab = (name) => document.querySelectorAll('.tab-panel').forEach((p) =>
+    p.classList.toggle('active', p.id === 'tab-' + name));
+[['open-sm', 'styles'], ['open-tm', 'traits'], ['open-layers', 'layers'], ['open-blocks', 'blocks']]
+    .forEach(([cmd, tab]) => editor.Commands.add(cmd, { run: () => showTab(tab), stop() {} }));
+
+// Демо-секции плагинов на холсте (как в index.html)
+const bm = editor.Blocks;
+const wrapper = editor.getWrapper();
+
+function addPluginDemo(title, blockId) {
+
+    const block = bm.get(blockId);
+
+    if (!block) {
+        console.warn('[demo] Блок "' + blockId + '" не найден — плагин не подключился.');
+        return;
+    }
+
+    let content = block.get('content');
+
+    if (typeof content === 'function') {
+        content = content(editor);
+    }
+
+    /*
+     * ВАЖНО: Component.find(selector) работает только с уже
+     * отрендеренным компонентом (так и написано в исходниках
+     * GrapesJS), а сразу после append() вид ещё не готов — поэтому
+     * find('.container') возвращал [] и .append() падал на
+     * undefined. Правильно — использовать то, что append() и так
+     * возвращает напрямую, без похода через find().
+     */
+
+    const [section] = wrapper.append({
+        tagName: 'section',
+        attributes: { class: 'demo-section' }
+    });
+
+    const [container] = section.append({
+        tagName: 'div',
+        attributes: { class: 'container' }
+    });
+
+    container.append({
+        tagName: 'span',
+        attributes: { class: 'demo-tag' },
+        components: title
+    });
+
+    container.append(content);
+}
+
+addPluginDemo('grapesjs-navbar', 'navbar');
+addPluginDemo('grapesjs-tabs', 'tabs');
+addPluginDemo('grapesjs-component-countdown', 'countdown');
+addPluginDemo('grapesjs-typed', 'typed');
+addPluginDemo('grapesjs-tooltip', 'tooltip');
+addPluginDemo('grapesjs-custom-code', 'custom-code');
+addPluginDemo('grapesjs-plugin-forms: form', 'form');
+
+
+
+
+// GrapesJS-плагин — обычная функция (editor, opts); editor.use() в GrapesJS нет.
+grapesjsLayersSidebar(editor, {});      // сплит слоёв, табы Style Manager / Settings, запоминание
+grapesjsLayersContextMenu(editor, {});  // ПКМ-меню + выбор по иерархии (пункт «Просмотреть стили» работает благодаря сайдбару)
+</script>
+</body>
+</html>
