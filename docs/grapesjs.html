@@ -1,841 +1,295 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>GrapesJS — все официальные бесплатные плагины</title>
-
-    <!-- =========================================================
-         GRAPESJS CORE (CSS)
-
-         Важно: версия core и версии плагинов должны быть
-         согласованы. Берём 0.21.13 — последний релиз ветки 0.21,
-         под которую делались и тестировались официальные плагины
-         GrapesJS (батч публикаций июнь–октябрь 2023).
-    ========================================================== -->
-
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/grapesjs@0.21.13/dist/css/grapes.min.css"
-    >
-
-    <!--
-         Grapick CSS — ОБЯЗАТЕЛЕН для grapesjs-style-gradient
-         и grapesjs-style-bg (пикер градиента/фона). Без него
-         виджет градиента отображается совсем без стилей —
-         именно это и выглядело "криво".
-    -->
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/grapick@0.1.13/dist/grapick.min.css"
-    >
-
-    <style>
-        html,
-        body {
-            margin: 0;
-            height: 100%;
-        }
-
-        #gjs {
-            height: 100vh;
-        }
-
-        /* Обёртка для демо-секций каждого плагина в холсте */
-        .demo-section {
-            padding: 60px 0;
-            border-top: 1px dashed #d8dee6;
-        }
-
-        .demo-section .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 30px;
-        }
-
-        .demo-tag {
-            display: inline-block;
-            margin-bottom: 18px;
-            padding: 4px 10px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-            color: #fff;
-            background: #4b5563;
-            border-radius: 4px;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GrapesJS — every official plugin and ours</title>
+<meta name="description" content="A GrapesJS demo stand: all official free plugins plus grapesjs-site-pages, storage, blueprints, fonts, sidebar tools, context menu, cloud assets, ruler, plugins manager, JSX export, forms and dark reader.">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-<div id="gjs"></div>
-
-
-<!-- =========================================================
-     CORE
-========================================================= -->
-
-<script src="https://unpkg.com/grapesjs@0.21.13/dist/grapes.min.js"></script>
-
-
-<!-- =========================================================
-     ОФИЦИАЛЬНЫЕ БЕСПЛАТНЫЕ ПЛАГИНЫ GRAPESJS
-     (все версии зафиксированы и согласованы между собой)
-========================================================= -->
-
-<!-- Пресет: базовый набор блоков + просмотр/импорт кода + тема -->
-<script src="https://unpkg.com/grapesjs-preset-webpage@1.0.3/dist/index.js"></script>
-
-<!-- Базовые блоки: текст, изображение, видео, карта, колонки -->
-<script src="https://unpkg.com/grapesjs-blocks-basic@1.0.2/dist/index.js"></script>
-
-<!-- Формы: form, input, textarea, select, checkbox, radio, button -->
-<script src="https://unpkg.com/grapesjs-plugin-forms@2.0.6/dist/index.js"></script>
-
-<!-- Навигационное меню -->
-<script src="https://unpkg.com/grapesjs-navbar@1.0.2/dist/index.js"></script>
-
-<!-- Вкладки (tabs) -->
-<script src="https://unpkg.com/grapesjs-tabs@1.0.6/dist/grapesjs-tabs.min.js"></script>
-
-<!-- Таймер обратного отсчёта -->
-<script src="https://unpkg.com/grapesjs-component-countdown@1.0.2/dist/index.js"></script>
-
-<!-- Произвольный HTML/JS-код -->
-<script src="https://unpkg.com/grapesjs-custom-code@1.0.2/dist/index.js"></script>
-
-<!-- Всплывающая подсказка (tooltip) -->
-<script src="https://unpkg.com/grapesjs-tooltip@0.1.8/dist/index.js"></script>
-
-<!-- Анимированный текст (typed.js) -->
-<script src="https://unpkg.com/grapesjs-typed@2.0.1/dist/index.js"></script>
-
-<!-- Более надёжный парсер CSS при импорте / вставке кода -->
-<script src="https://unpkg.com/grapesjs-parser-postcss@1.0.3/dist/index.js"></script>
-
-<!-- Стили: градиент -->
-<script src="https://unpkg.com/grapesjs-style-gradient@3.0.3/dist/index.js"></script>
-
-<!-- Стили: фон (цвет/картинка/градиент в одном свойстве) -->
-<script src="https://unpkg.com/grapesjs-style-bg@2.0.2/dist/index.js"></script>
-
-<!-- Стили: CSS-фильтры (blur, brightness, contrast...) -->
-<script src="https://unpkg.com/grapesjs-style-filter@1.0.2/dist/index.js"></script>
-
-<!-- Экспорт в ZIP -->
-<script src="https://unpkg.com/grapesjs-plugin-export@1.0.12/dist/index.js"></script>
-
-<!-- TOAST UI Image Editor (редактирование изображений прямо в холсте) -->
-<script src="https://unpkg.com/grapesjs-tui-image-editor@1.0.2/dist/index.js"></script>
-
-<!--
-     grapesjs-cloud-assets: наш собственный плагин.
-
-     Важно: "grapesjs-cloud-assets.js" в dist/ — это ESM-сборка
-     (внутри есть `export ...`), которую браузер понимает только
-     как <script type="module">. Весь остальной файл собран из
-     классических <script> (без type="module"), поэтому здесь
-     подключаем UMD-сборку — она такая же по возможностям, но
-     регистрирует себя как обычный глобал window.grapesjsCloudAssets,
-     как и все плагины выше.
--->
-<script src="/plugins/grapesjs-cloud-assets/dist/grapesjs-cloud-assets.umd.cjs"></script>
-
-<!--
-     grapesjs-sidebar-tools: наш плагин — разделённая панель Layers
-     (дерево слоёв сверху, вкладки Style Manager / Component Settings снизу).
-     UMD-сборка регистрирует саму функцию плагина как window.grapesjsSidebarTools.
--->
-<script src="/plugins/grapesjs-sidebar-tools/dist/grapesjs-sidebar-tools.umd.cjs"></script>
-
-<!--
-     grapesjs-context-menu: наш плагин — меню по правому клику на холсте
-     и в Layer Manager + кликабельный бейдж иерархии над выделенным
-     элементом. UMD-сборка, как у cloud-assets: глобал
-     window.grapesjsContextMenu = { default: pluginFn, ... }.
-     Пункт "Просмотреть стили" запускает команду
-     layers-sidebar:show-styles из grapesjs-sidebar-tools.
--->
-<script src="/plugins/grapesjs-context-menu/dist/grapesjs-context-menu.umd.cjs"></script>
-
-
-<!-- =========================================================
-     ИНИЦИАЛИЗАЦИЯ
-========================================================= -->
-
-<script>
-
-const editor = grapesjs.init({
-
-    container: '#gjs',
-
-    height: '100vh',
-
-    width: 'auto',
-
-    storageManager: false,
-
-    telemetry: false,
-
-
-    /*
-     * ВАЖНО про имена плагинов:
-     *
-     * Каждый официальный плагин GrapesJS, подключённый через
-     * unpkg-скрипт, регистрирует себя в window под СВОИМ полным
-     * именем npm-пакета, например:
-     *
-     *   window['grapesjs-plugin-forms']
-     *   window['grapesjs-navbar']
-     *   window['grapesjs-style-bg']
-     *
-     * Единственное историческое исключение — grapesjs-blocks-basic,
-     * который зарегистрирован под сокращённым 'gjs-blocks-basic'.
-     *
-     * GrapesJS резолвит строку из массива `plugins` именно через
-     * window[строка] — если строка не совпадает 1-в-1 с тем, что
-     * реально экспортировал скрипт, плагин ТИХО пропускается
-     * (в консоль пишется "Plugin ... not found") и его блоки/
-     * компоненты просто не появляются. Именно это и происходило
-     * в предыдущей версии файла: почти все плагины (кроме
-     * blocks-basic) были указаны под неверными сокращёнными
-     * именами и никогда не подключались.
-     */
-
-    plugins: [
-
-        'grapesjs-preset-webpage',
-
-        'gjs-blocks-basic',
-
-        'grapesjs-plugin-forms',
-
-        'grapesjs-navbar',
-
-        'grapesjs-tabs',
-
-        'grapesjs-component-countdown',
-
-        'grapesjs-custom-code',
-
-        'grapesjs-tooltip',
-
-        'grapesjs-typed',
-
-        'grapesjs-parser-postcss',
-
-        'grapesjs-style-gradient',
-
-        'grapesjs-style-bg',
-
-        'grapesjs-style-filter',
-
-        'grapesjs-plugin-export',
-
-        'grapesjs-tui-image-editor',
-
-        /*
-         * grapesjs-cloud-assets собран в UMD как объект
-         * { default: pluginFn, DropboxProvider }, а не под именем
-         * window['grapesjs-cloud-assets'] — поэтому передаём саму
-         * функцию напрямую, а не строку. Так надёжнее в принципе:
-         * никакой строковой сверки с window[...] вообще не нужно.
-         */
-        grapesjsCloudAssets.default,
-
-        /*
-         * grapesjs-sidebar-tools: UMD-глобал — это сама функция
-         * плагина (не объект { default }), передаём её напрямую.
-         */
-        grapesjsSidebarTools,
-
-        /*
-         * grapesjs-context-menu: UMD-глобал — объект { default: pluginFn },
-         * как у cloud-assets. Язык меню берётся из editor.I18n (en/ru/uk).
-         */
-        grapesjsContextMenu.default
-
-    ],
-
-
-    pluginsOpts: {
-
-        'grapesjs-preset-webpage': {
-            blocks: ['link-block', 'quote', 'text-basic'],
-            modalImportTitle: 'Импорт кода',
-            modalImportButton: 'Импортировать',
-            modalImportLabel: 'Вставьте сюда HTML/CSS для импорта в холст',
-            modalImportContent: editor => editor.getHtml() + '<style>' + editor.getCss() + '</style>'
-        },
-
-        'gjs-blocks-basic': {
-            flexGrid: true
-        },
-
-        'grapesjs-plugin-forms': {
-            blocks: [
-                'form',
-                'input',
-                'textarea',
-                'select',
-                'checkbox',
-                'radio',
-                'button'
-            ]
-        },
-
-        'grapesjs-navbar': {},
-
-        'grapesjs-tabs': {},
-
-        'grapesjs-component-countdown': {
-            startTime: '2027-01-01 00:00'
-        },
-
-        'grapesjs-custom-code': {},
-
-        'grapesjs-tooltip': {},
-
-        'grapesjs-typed': {},
-
-        'grapesjs-parser-postcss': {},
-
-        'grapesjs-style-gradient': {},
-
-        'grapesjs-style-bg': {},
-
-        'grapesjs-style-filter': {},
-
-        'grapesjs-plugin-export': {
-            btnLabel: 'Экспорт в ZIP'
-        },
-
-        'grapesjs-tui-image-editor': {},
-
-        /*
-         * Ни один из трёх провайдеров не принимает App Key/Client ID
-         * здесь в коде — ни у одного облачного провайдера нет общего
-         * ключа, который работал бы на произвольном чужом домене без
-         * предрегистрации, так что зашитый здесь ключ всё равно не
-         * подошёл бы стороннему сайту, который просто поставит этот
-         * плагин. Вместо этого при первом открытии вкладки провайдера
-         * в Asset Manager плагин сам показывает пошаговый мастер
-         * настройки (ссылка на консоль провайдера, нужные scopes,
-         * origin/redirect URI — подставляется автоматически, где
-         * применимо) и поле для ввода своего ключа. Ключ сохраняется
-         * в localStorage браузера — мастер не будет показан повторно,
-         * пока его не сбросить кнопкой "Изменить ключ".
-         */
-        [grapesjsCloudAssets.default]: {
-            providers: [
-                new grapesjsCloudAssets.DropboxProvider(),
-                new grapesjsCloudAssets.GoogleDriveProvider(),
-                new grapesjsCloudAssets.OneDriveProvider(),
-				new grapesjsCloudAssets.BoxProvider(),
-            ]
-        },
-
-        /*
-         * Тексты grapesjs-sidebar-tools берутся из его собственных
-         * переводов (22 языка, как у ядра GrapesJS) по локали редактора —
-         * по умолчанию это язык браузера. Чтобы зафиксировать свои
-         * подписи для всех языков, передайте, например:
-         *   labels: { styleManagerTab: 'Стили' }
-         */
-        [grapesjsSidebarTools]: {},
-
-        /*
-         * Все опции необязательные, здесь — значения по умолчанию.
-         */
-        [grapesjsContextMenu.default]: {
-            blocks: null,            // null = все блоки в "Добавить элемент"
-            canvasMenu: true,        // ПКМ на холсте
-            layersMenu: true,        // ПКМ в Layer Manager
-            hierarchyBadge: true,    // бейдж "Имя ▾" над выделенным элементом
-            viewStylesCommand: 'layers-sidebar:show-styles' // команда grapesjs-sidebar-tools
-        }
-
-    },
-
-
-    /*
-     * Devices
-     */
-
-    deviceManager: {
-
-        devices: [
-
-            {
-                id: 'desktop',
-
-                name: 'Desktop',
-
-                width: ''
-
-            },
-
-            {
-                id: 'tablet',
-
-                name: 'Tablet',
-
-                width: '768px',
-
-                widthMedia: '992px'
-
-            },
-
-            {
-                id: 'mobile',
-
-                name: 'Mobile',
-
-                width: '375px',
-
-                widthMedia: '767px'
-
-            }
-
-        ]
-
-    },
-
-
-    /*
-     * Начальная разметка холста — обычная страница
-     */
-
-    components: `
-
-        <header class="header">
-
-            <div class="container">
-
-                <nav>
-
-                    <a href="#" class="logo">
-                        My Website
-                    </a>
-
-                    <div class="menu">
-
-                        <a href="#">
-                            Home
-                        </a>
-
-                        <a href="#">
-                            About
-                        </a>
-
-                        <a href="#">
-                            Contact
-                        </a>
-
-                    </div>
-
-                </nav>
-
-            </div>
-
-        </header>
-
-
-        <main>
-
-            <section class="hero">
-
-                <div class="container">
-
-                    <h1>
-                        GrapesJS
-                    </h1>
-
-                    <p>
-                        Visual Web Builder — со всеми официальными
-                        бесплатными плагинами.
-                    </p>
-
-                    <button>
-                        Get Started
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <section>
-
-                <div class="container">
-
-                    <h2>
-                        Features
-                    </h2>
-
-                    <div class="grid">
-
-                        <div>
-
-                            <h3>
-                                Blocks
-                            </h3>
-
-                            <p>
-                                Drag and drop components.
-                            </p>
-
-                        </div>
-
-
-                        <div>
-
-                            <h3>
-                                Responsive
-                            </h3>
-
-                            <p>
-                                Desktop, tablet and mobile.
-                            </p>
-
-                        </div>
-
-
-                        <div>
-
-                            <h3>
-                                Styling
-                            </h3>
-
-                            <p>
-                                Full CSS Style Manager: gradient,
-                                background, filters.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <img
-                        src="https://picsum.photos/800/500"
-                        alt="Demo image"
-                        style="max-width:100%;margin-top:40px;border-radius:8px;"
-                    >
-
-                    <p style="color:#666;font-size:14px;">
-                        ↑ Дважды кликните по картинке — откроется
-                        TOAST UI Image Editor.
-                    </p>
-
-                </div>
-
-            </section>
-
-        </main>
-
-
-        <footer>
-
-            <div class="container">
-
-                Footer
-                &middot;
-                Используйте кнопку "Export ZIP" и "Импорт" на
-                верхней панели, чтобы проверить экспорт/импорт кода.
-
-            </div>
-
-        </footer>
-
-    `,
-
-
-    /*
-     * Начальный CSS
-     */
-
-    style: `
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        body {
-
-            margin: 0;
-
-            font-family:
-                Arial,
-                sans-serif;
-
-            color: #222;
-
-        }
-
-
-        .container {
-
-            width: 100%;
-
-            max-width: 1200px;
-
-            margin: auto;
-
-            padding:
-                0 30px;
-
-        }
-
-
-        .header {
-
-            padding:
-                20px 0;
-
-            border-bottom:
-                1px solid #ddd;
-
-        }
-
-
-        nav {
-
-            display: flex;
-
-            justify-content:
-                space-between;
-
-            align-items:
-                center;
-
-        }
-
-
-        .logo {
-
-            font-size:
-                22px;
-
-            font-weight:
-                700;
-
-            color:
-                #222;
-
-            text-decoration:
-                none;
-
-        }
-
-
-        .menu {
-
-            display: flex;
-
-            gap:
-                20px;
-
-        }
-
-
-        .menu a {
-
-            color:
-                #222;
-
-            text-decoration:
-                none;
-
-        }
-
-
-        .hero {
-
-            padding:
-                120px 0;
-
-            text-align:
-                center;
-
-            background:
-                #f3f4f6;
-
-        }
-
-
-        .hero h1 {
-
-            margin:
-                0 0 20px;
-
-            font-size:
-                56px;
-
-        }
-
-
-        .hero p {
-
-            font-size:
-                20px;
-
-            margin:
-                0 0 30px;
-
-        }
-
-
-        button {
-
-            padding:
-                12px 24px;
-
-            border:
-                0;
-
-            border-radius:
-                6px;
-
-            background:
-                #222;
-
-            color:
-                white;
-
-            cursor:
-                pointer;
-
-        }
-
-
-        section {
-
-            padding:
-                80px 0;
-
-        }
-
-
-        .grid {
-
-            display:
-                grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap:
-                30px;
-
-        }
-
-
-        footer {
-
-            padding:
-                50px 0;
-
-            background:
-                #111;
-
-            color:
-                white;
-
-        }
-
-    `
-
-});
-
-window.editor = editor;
-
-
-/*
- * ==========================================================
- * ДЕМО-СЕКЦИИ: показываем "живьём" блок каждого плагина,
- * который не входит в стандартный набор blocks-basic, сразу
- * на холсте — чтобы сразу видеть, что все плагины реально
- * подключились и работают, а не только доступны в панели
- * блоков справа.
- * ==========================================================
- */
-
-const bm = editor.Blocks;
-const wrapper = editor.getWrapper();
-
-function addPluginDemo(title, blockId) {
-
-    const block = bm.get(blockId);
-
-    if (!block) {
-        console.warn('[demo] Блок "' + blockId + '" не найден — плагин не подключился.');
-        return;
-    }
-
-    let content = block.get('content');
-
-    if (typeof content === 'function') {
-        content = content(editor);
-    }
-
-    /*
-     * ВАЖНО: Component.find(selector) работает только с уже
-     * отрендеренным компонентом (так и написано в исходниках
-     * GrapesJS), а сразу после append() вид ещё не готов — поэтому
-     * find('.container') возвращал [] и .append() падал на
-     * undefined. Правильно — использовать то, что append() и так
-     * возвращает напрямую, без похода через find().
-     */
-
-    const [section] = wrapper.append({
-        tagName: 'section',
-        attributes: { class: 'demo-section' }
+<div id="gjs" class="demo-stand"><div class="demo-intro"><h1>GrapesJS demo stand</h1><p>github.com/shibisty/grapesjs-stand: GrapesJS 0.21.13 with every official free plugin and ours, loaded from a CDN and driven by grapesjs-plugins-manager (its ⚙ switches plugins on/off and edits their options). In the site editor its script does not run: open the preview or the published page.</p><ul><li>grapesjs-preset-webpage@1.0.3</li><li>grapesjs-blocks-basic@1.0.2</li><li>grapesjs-plugin-forms@2.0.6</li><li>grapesjs-navbar@1.0.2</li><li>grapesjs-tabs@1.0.6</li><li>grapesjs-component-countdown@1.0.2</li><li>grapesjs-custom-code@1.0.2</li><li>grapesjs-tooltip@0.1.8</li><li>grapesjs-typed@2.0.1</li><li>grapesjs-parser-postcss@1.0.3</li><li>grapesjs-style-gradient@3.0.3</li><li>grapesjs-style-bg@2.0.2</li><li>grapesjs-style-filter@1.0.2</li><li>grapesjs-plugin-export@1.0.12</li><li>grapesjs-tui-image-editor@1.0.2</li><li>grapesjs-plugins-manager@1.1.1</li><li>grapesjs-cloud-assets@0.11.0</li><li>grapesjs-sidebar-tools@2.5.0</li><li>grapesjs-context-menu@1.3.1</li><li>grapesjs-export-jsx@1.1.1</li><li>grapesjs-site-pages@2.16.0</li><li>grapesjs-blueprints@0.5.0</li><li>grapesjs-storage@1.6.0</li><li>grapesjs-fonts@0.3.1</li><li>grapesjs-ruler@0.3.1</li><li>grapesjs-darkreader@0.1.0</li><li>grapesjs-forms@0.2.0</li></ul></div></div>
+<link rel="stylesheet" href="https://unpkg.com/grapesjs@0.21.13/dist/css/grapes.min.css">
+<link rel="stylesheet" href="https://unpkg.com/grapick@0.1.13/dist/grapick.min.css">
+<script src="https://unpkg.com/grapesjs@0.21.13/dist/grapes.min.js" defer></script>
+<script src="https://unpkg.com/grapesjs-preset-webpage@1.0.3/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-blocks-basic@1.0.2/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-plugin-forms@2.0.6/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-navbar@1.0.2/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-tabs@1.0.6/dist/grapesjs-tabs.min.js" defer></script>
+<script src="https://unpkg.com/grapesjs-component-countdown@1.0.2/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-custom-code@1.0.2/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-tooltip@0.1.8/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-typed@2.0.1/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-parser-postcss@1.0.3/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-style-gradient@3.0.3/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-style-bg@2.0.2/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-style-filter@1.0.2/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-plugin-export@1.0.12/dist/index.js" defer></script>
+<script src="https://unpkg.com/grapesjs-tui-image-editor@1.0.2/dist/index.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-plugins-manager@1.1.1/dist/grapesjs-plugins-manager.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-cloud-assets@0.11.0/dist/grapesjs-cloud-assets.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-sidebar-tools@2.5.0/dist/grapesjs-sidebar-tools.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-context-menu@1.3.1/dist/grapesjs-context-menu.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-export-jsx@1.1.1/dist/grapesjs-export-jsx.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-site-pages@2.16.0/dist/grapesjs-pages.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-blueprints@0.5.0/dist/grapesjs-scripts.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-storage@1.6.0/dist/grapesjs-storage.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-fonts@0.3.1/dist/grapesjs-fonts.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-ruler@0.3.1/dist/grapesjs-ruler.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-darkreader@0.1.0/dist/grapesjs-darkreader.umd.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/grapesjs-forms@0.2.0/dist/grapesjs-forms.umd.js" defer></script>
+<script>/* Generated by grapesjs-scripts from blueprints. Edit the blueprints, not this file. */
+(function () {
+  'use strict';
+  var blueprints = [
+    { id: "bp_dark_theme", when: null, run: function (root, ctx) {
+      // Dark theme (global)
+      var __d = [];
+      var __doc = root.nodeType === 9 ? root : root.ownerDocument;
+      var __win = __doc.defaultView || window;
+      var params = (ctx && ctx.params) || {};
+      // start · On start
+      // run · JavaScript
+      var _code1 = function (inputs, ctx) {
+        (function he(r,t){var e=window,n=document,i=e.gjsTheme;if(r){if(!i){var o=null;try{o=e.frameElement}catch{o=null}if(o&&(" "+o.className+" ").indexOf(" gjs-frame ")>=0||!r.on)return;var a=n.documentElement,u=e.matchMedia?e.matchMedia("(prefers-color-scheme: dark)"):null,p={generated:!1,choice:null,started:!1},R=[],x=[],w=null,m=null,j=0,C=function(){if(!r.remember)return null;try{var g=e.localStorage.getItem(r.key);return g==="original"||g==="generated"?g:null}catch{return null}},I=function(g){if(r.remember)try{g?e.localStorage.setItem(r.key,g):e.localStorage.removeItem(r.key)}catch{}},D=function(){var g=p.choice||(r.initial==="system"?null:r.initial);if(g)return g==="generated";var y=!!(u&&u.matches);return y===(r.generated==="dark")},l=function(){return p.generated?r.generated:r.scheme},v=function(){clearTimeout(j),m&&m.parentNode&&m.parentNode.removeChild(m),m=null},S=function(){!r.antiFlash||m||e.DarkReader||(m=n.createElement("style"),m.setAttribute("data-gjs-theme-flash",""),m.textContent="html{background:"+r.flashBackground+" !important}body{visibility:hidden !important}",(n.head||a).appendChild(m),j=setTimeout(v,3e3))},b=function(g){if(e.DarkReader)return g();if(w){w.push(g);return}w=[g];var y=n.createElement("script");y.src=r.src,y.async=!0,y.setAttribute("data-gjs-theme-engine",""),y.onload=function(){var A=w||[];w=null;for(var K=0;K<A.length;K++)A[K]()},y.onerror=function(){w=null,v()},(n.head||a).appendChild(y)},T=function(){var g=l();a.setAttribute("data-gjs-theme",g);for(var y=0;y<R.length;y++)R[y].setAttribute("aria-pressed",g==="dark"?"true":"false");for(var A=0;A<x.length;A++)try{x[A]({scheme:g,generated:p.generated})}catch{}},k=null,_=function(g,y){if(p.generated=g,T(),r.engine==="filter"){g&&!k?(k=n.createElement("style"),k.setAttribute("data-gjs-theme-filter",""),k.textContent=r.filterCss,(n.head||a).appendChild(k)):!g&&k&&(k.parentNode&&k.parentNode.removeChild(k),k=null);return}if(g)y&&S(),b(function(){if(!p.generated)return v();try{e.DarkReader.enable(r.theme,r.fixes)}catch{}v()});else if(v(),e.DarkReader)try{e.DarkReader.disable()}catch{}};if(i=e.gjsTheme={config:r,get:l,isGenerated:function(){return p.generated},set:function(g){if(g==="system")p.choice=null;else if(g==="original"||g==="generated")p.choice=g;else if(g==="dark"||g==="light")p.choice=g===r.generated?"generated":"original";else return;I(p.choice),D()!==p.generated&&_(D())},toggle:function(){i.set(p.generated?"original":"generated")},bind:function(g){!g||g.__gjsThemeBound||(g.__gjsThemeBound=!0,R.push(g),g.setAttribute("aria-pressed",l()==="dark"?"true":"false"),g.addEventListener("click",function(y){y.preventDefault(),i.toggle()}))},on:function(g){return x.push(g),function(){var y=x.indexOf(g);y>=0&&x.splice(y,1)}}},p.choice=C(),u){var B=function(){!p.choice&&r.initial==="system"&&D()!==p.generated&&_(D())};u.addEventListener?u.addEventListener("change",B):u.addListener&&u.addListener(B)}_(D(),!0);var Z=function(){for(var g=n.querySelectorAll("[data-gjs-theme-toggle]"),y=0;y<g.length;y++)i.bind(g[y])};n.readyState==="loading"?n.addEventListener("DOMContentLoaded",Z):Z()}t&&i&&i.bind&&i.bind(t)}})({"on":true,"src":"https://cdn.jsdelivr.net/npm/darkreader@4.9.135/darkreader.min.js","scheme":"light","generated":"dark","initial":"system","remember":true,"key":"gjs-theme","antiFlash":true,"flashBackground":"#111111","engine":"dynamic","filterCss":"","theme":{"mode":1,"brightness":100,"contrast":100,"sepia":0,"grayscale":0,"darkSchemeBackgroundColor":"#111111","darkSchemeTextColor":"#ffffff","lightSchemeBackgroundColor":"#ffffff","lightSchemeTextColor":"#111111","selectionColor":"auto","scrollbarColor":""},"fixes":{"url":["*"],"invert":[],"css":"","ignoreInlineStyle":[],"ignoreImageAnalysis":[],"disableStyleSheetsProxy":false}});
+      };
+      var _r2 = _code1({  }, { root: root, document: __doc, window: __win, params: params }) || {};
+      return function () {
+        __d.splice(0).forEach(function (f) { try { f(); } catch (e) {} });
+      };
+    } }
+  ];
+  function start(doc) {
+    var stops = [];
+    blueprints.forEach(function (b) {
+      try {
+        if (b.when && !doc.querySelector(b.when)) return;
+        var stop = b.run(doc, {});
+        if (typeof stop === 'function') stops.push(stop);
+      } catch (e) {
+        if (typeof console !== 'undefined') console.error('[blueprint ' + b.id + ']', e);
+      }
     });
-
-    const [container] = section.append({
-        tagName: 'div',
-        attributes: { class: 'container' }
-    });
-
-    container.append({
-        tagName: 'span',
-        attributes: { class: 'demo-tag' },
-        components: title
-    });
-
-    container.append(content);
-}
-
-addPluginDemo('grapesjs-navbar', 'navbar');
-addPluginDemo('grapesjs-tabs', 'tabs');
-addPluginDemo('grapesjs-component-countdown', 'countdown');
-addPluginDemo('grapesjs-typed', 'typed');
-addPluginDemo('grapesjs-tooltip', 'tooltip');
-addPluginDemo('grapesjs-custom-code', 'custom-code');
-addPluginDemo('grapesjs-plugin-forms: form', 'form');
-
-
-/*
- * Для DevTools
- */
-
-console.log('GrapesJS:', editor);
-/*
- * editor.Plugins не существует — плагины на самом инстансе редактора
- * нигде отдельным реестром не хранятся (window.grapesjs.plugins —
- * это глобальный реестр ОПРЕДЕЛЕНИЙ плагинов через .add(), а не
- * список того, что загружено в этот editor). Проще и надёжнее —
- * посмотреть на тот же массив, что передан в конфиг ниже.
- */
-console.log('Плагины в конфиге:', editor.getConfig().plugins);
-
+    return function () { stops.splice(0).forEach(function (s) { try { s(); } catch (e) {} }); };
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { start(document); });
+  else start(document);
+})();
 </script>
+<script>/* Generated by grapesjs-scripts from blueprints. Edit the blueprints, not this file. */
+(function () {
+  'use strict';
+  var blueprints = [
+    { id: "bp_demo_editor", when: null, run: function (root, ctx) {
+      // Demo editor (template)
+      var __d = [];
+      var __doc = root.nodeType === 9 ? root : root.ownerDocument;
+      var __win = __doc.defaultView || window;
+      var params = (ctx && ctx.params) || {};
+      // start · On start
+      // init · JavaScript
+      var _code1 = function (inputs, ctx) {
+        /*
+         * GrapesJS demo stand, mirroring github.com/shibisty/grapesjs-stand: GrapesJS
+         * 0.21.13 (the branch the official plugins were tested against), every
+         * official free plugin, and all of ours — all loaded from a CDN, driven by
+         * grapesjs-plugins-manager's `configure()` (the stand's own bootstrap, not a
+         * hand-rolled one), with the manager's own toolbar button to switch plugins
+         * on/off and edit their options live.
+         *
+         * Runs as the code of the "Demo editor" blueprint on the /grapesjs page: the
+         * page's libraries (the CDN scripts and styles above) are declared on the
+         * site's shared scripts and loaded by grapesjs-blueprints before this code
+         * runs; this file only waits for them and calls grapesjs.init().
+         *
+         * The CDN library search (grapesjs-blueprints) and the font catalogues
+         * (grapesjs-fonts) use the stand's PHP proxies (`proxy/*.php`) when served
+         * from a PHP host; this server is Node, so both run without a proxy — Google
+         * Fonts and adding a CDN library by URL still work (see each plugin's README).
+         */
+        (function () {
+          var w = window;
+          var d = document;
+          var DEMO = {"html":"<header class=\"header\">\n            <div class=\"container\">\n                <nav>\n                    <a href=\"#\" class=\"logo\">\n                        My Website\n                    </a>\n                    <div class=\"menu\">\n                        <a href=\"#\">\n                            Home\n                        </a>\n                        <a href=\"#\">\n                            About\n                        </a>\n                        <a href=\"#\">\n                            Contact\n                        </a>\n                    </div>\n                </nav>\n            </div>\n        </header>\n        <main>\n            <section class=\"hero\">\n                <div class=\"container\">\n                    <h1>\n                        GrapesJS\n                    </h1>\n                    <p>\n                        Visual Web Builder with every official free plugin and ours.\n                    </p>\n                    <button>\n                        Get Started\n                    </button>\n                </div>\n            </section>\n            <section>\n                <div class=\"container\">\n                    <h2>\n                        Features\n                    </h2>\n                    <div class=\"grid\">\n                        <div>\n                            <h3>\n                                Blocks\n                            </h3>\n                            <p>\n                                Drag and drop components.\n                            </p>\n                        </div>\n                        <div>\n                            <h3>\n                                Responsive\n                            </h3>\n                            <p>\n                                Desktop, tablet and mobile.\n                            </p>\n                        </div>\n                        <div>\n                            <h3>\n                                Styling\n                            </h3>\n                            <p>\n                                Full CSS Style Manager: gradient,\n                                background, filters.\n                            </p>\n                        </div>\n                    </div>\n                    <img\n                        src=\"https://picsum.photos/800/500\"\n                        alt=\"Demo image\"\n                        style=\"max-width:100%;margin-top:40px;border-radius:8px;\"\n                    >\n                    <p style=\"color:#666;font-size:14px;\">\n                        ↑ Double-click the image: the TOAST UI Image Editor opens.\n                    </p>\n                </div>\n            </section>\n        </main>\n        <footer>\n            <div class=\"container\">\n                Footer &middot; try \"Export ZIP\", \"Export JSX\", the Pages and Plugins buttons.\n            </div>\n        </footer>","css":"* {\n            box-sizing: border-box;\n        }\n        body {\n            margin: 0;\n            font-family:\n                Arial,\n                sans-serif;\n            color: #222;\n        }\n        .container {\n            width: 100%;\n            max-width: 1200px;\n            margin: auto;\n            padding:\n                0 30px;\n        }\n        .header {\n            padding:\n                20px 0;\n            border-bottom:\n                1px solid #ddd;\n        }\n        nav {\n            display: flex;\n            justify-content:\n                space-between;\n            align-items:\n                center;\n        }\n        .logo {\n            font-size:\n                22px;\n            font-weight:\n                700;\n            color:\n                #222;\n            text-decoration:\n                none;\n        }\n        .menu {\n            display: flex;\n            gap:\n                20px;\n        }\n        .menu a {\n            color:\n                #222;\n            text-decoration:\n                none;\n        }\n        .hero {\n            padding:\n                120px 0;\n            text-align:\n                center;\n            background:\n                #f3f4f6;\n        }\n        .hero h1 {\n            margin:\n                0 0 20px;\n            font-size:\n                56px;\n        }\n        .hero p {\n            font-size:\n                20px;\n            margin:\n                0 0 30px;\n        }\n        button {\n            padding:\n                12px 24px;\n            border:\n                0;\n            border-radius:\n                6px;\n            background:\n                #222;\n            color:\n                white;\n            cursor:\n                pointer;\n        }\n        section {\n            padding:\n                80px 0;\n        }\n        .grid {\n            display:\n                grid;\n            grid-template-columns:\n                repeat(3, 1fr);\n            gap:\n                30px;\n        }\n        footer {\n            padding:\n                50px 0;\n            background:\n                #111;\n            color:\n                white;\n        }\n.demo-section { padding: 60px 0; border-top: 1px dashed #d8dee6; }\n.demo-section .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 30px; }\n.demo-tag { display: inline-block; margin-bottom: 18px; padding: 4px 10px; font-size: 12px; font-weight: 700;\n  letter-spacing: .04em; text-transform: uppercase; color: #fff; background: #4b5563; border-radius: 4px; }","ui":".demo-error { padding: 40px; color: #ffb4b4; font-family: Arial, sans-serif; }"};
+          var root = d.getElementById('gjs');
+          if (!root) return;
 
+          function fail(msg) {
+            root.innerHTML = '<div class="demo-error">' + String(msg).replace(/[<&]/g, function (c) { return c === '<' ? '&lt;' : '&amp;'; }) + '</div>';
+          }
+
+          if (!w.grapesjs) return fail('GrapesJS did not load (the CDN is not reachable?).');
+          if (!w.grapesjsPluginsManager) return fail('grapesjs-plugins-manager did not load (the CDN is not reachable?).');
+
+          var ui = d.createElement('style');
+          ui.textContent = DEMO.ui;
+          d.head.appendChild(ui);
+
+          var config = w.grapesjsPluginsManager.configure({
+            container: root,
+            height: '100vh',
+            width: 'auto',
+            telemetry: false,
+            storageManager: false,
+            deviceManager: {
+              devices: [
+                { id: 'desktop', name: 'Desktop', width: '' },
+                { id: 'tablet', name: 'Tablet', width: '768px', widthMedia: '992px' },
+                { id: 'mobile', name: 'Mobile', width: '375px', widthMedia: '767px' },
+              ],
+            },
+            plugins: [
+              'grapesjs-plugins-manager', // first: it then manages the rest
+
+              // official
+              'grapesjs-preset-webpage',
+              'gjs-blocks-basic',
+              'grapesjs-plugin-forms',
+              'grapesjs-navbar',
+              'grapesjs-tabs',
+              'grapesjs-component-countdown',
+              'grapesjs-custom-code',
+              'grapesjs-tooltip',
+              'grapesjs-typed',
+              'grapesjs-parser-postcss',
+              'grapesjs-style-gradient',
+              'grapesjs-style-bg',
+              'grapesjs-style-filter',
+              'grapesjs-plugin-export',
+              'grapesjs-tui-image-editor',
+
+              // ours
+              'grapesjs-cloud-assets',
+              'grapesjs-sidebar-tools',
+              'grapesjs-context-menu',
+              'grapesjs-export-jsx',
+              'grapesjs-site-pages',
+              'grapesjs-blueprints',
+              'grapesjs-storage',
+              'grapesjs-fonts',
+              'grapesjs-ruler',
+              'grapesjs-darkreader',
+              'grapesjs-forms',
+            ],
+            pluginsOpts: {
+              'grapesjs-preset-webpage': {
+                blocks: ['link-block', 'quote', 'text-basic'],
+                modalImportTitle: 'Import code',
+                modalImportButton: 'Import',
+                modalImportLabel: 'Paste HTML/CSS here to import it into the canvas',
+                modalImportContent: function (editor) { return editor.getHtml() + '<style>' + editor.getCss() + '</style>'; },
+              },
+              'gjs-blocks-basic': { flexGrid: true },
+              'grapesjs-plugin-forms': { blocks: ['form', 'input', 'textarea', 'select', 'checkbox', 'radio', 'button'] },
+              'grapesjs-navbar': {},
+              'grapesjs-tabs': {},
+              'grapesjs-component-countdown': { startTime: '2027-01-01 00:00' },
+              'grapesjs-custom-code': {},
+              'grapesjs-tooltip': {},
+              'grapesjs-typed': {},
+              'grapesjs-parser-postcss': {},
+              'grapesjs-style-gradient': {},
+              'grapesjs-style-bg': {},
+              'grapesjs-style-filter': {},
+              'grapesjs-plugin-export': { btnLabel: 'Export ZIP' },
+              'grapesjs-tui-image-editor': {},
+              // No app keys in the code: the first time a cloud tab opens, the plugin
+              // itself shows a setup wizard; the key stays in this browser.
+              'grapesjs-cloud-assets': { providers: ['dropbox', 'google-drive', 'onedrive', 'box'] },
+              'grapesjs-sidebar-tools': {},
+              'grapesjs-context-menu': { blocks: null, canvasMenu: true, layersMenu: true, hierarchyBadge: true, viewStylesCommand: 'layers-sidebar:show-styles' },
+              'grapesjs-export-jsx': { componentName: 'Page', cssImport: true, reactImport: true, wrapper: 'fragment', button: true },
+              'grapesjs-site-pages': {},
+              'grapesjs-blueprints': {},
+              'grapesjs-storage': {},
+              'grapesjs-fonts': {},
+              'grapesjs-ruler': {},
+              'grapesjs-darkreader': {},
+              'grapesjs-forms': {},
+              'grapesjs-plugins-manager': {},
+            },
+            components: DEMO.html,
+            style: DEMO.css,
+          });
+
+          var editor = w.grapesjs.init(config);
+          w.editor = editor;
+          seed(editor);
+          console.log('[demo] plugins:', editor.getConfig().plugins);
+
+          /*
+           * The first time (empty IndexedDB), a section per plugin with a block of
+           * its own, so every plugin is seen working on the canvas, not only
+           * available in the Blocks panel.
+           */
+          function seed(ed) {
+            function store(key, value) {
+              try {
+                if (value === undefined) return w.localStorage.getItem(key);
+                w.localStorage.setItem(key, value);
+              } catch (e) { /* private mode, sandboxed preview */ }
+              return null;
+            }
+            var KEY = 'luna-demo:seeded';
+            var go = function () {
+              if (store(KEY) || ed.getWrapper().find('.demo-section').length) return;
+              store(KEY, '1');
+              [
+                ['grapesjs-navbar', 'navbar'],
+                ['grapesjs-tabs', 'tabs'],
+                ['grapesjs-component-countdown', 'countdown'],
+                ['grapesjs-typed', 'typed'],
+                ['grapesjs-tooltip', 'tooltip'],
+                ['grapesjs-custom-code', 'custom-code'],
+                ['grapesjs-plugin-forms: form', 'form'],
+                ['grapesjs-darkreader', 'theme-toggle'],
+              ].forEach(function (p) {
+                var block = ed.Blocks.get(p[1]);
+                if (!block) return console.warn('[demo] no block "' + p[1] + '" (' + p[0] + ' is off?)');
+                var content = block.get('content');
+                if (typeof content === 'function') content = content(ed);
+                var section = ed.getWrapper().append({ tagName: 'section', attributes: { class: 'demo-section' } })[0];
+                var box = section.append({ tagName: 'div', attributes: { class: 'container' } })[0];
+                box.append({ tagName: 'span', attributes: { class: 'demo-tag' }, components: p[0] });
+                box.append(content);
+              });
+            };
+            var done = false;
+            var once = function () {
+              if (done) return;
+              done = true;
+              setTimeout(go, 300);
+            };
+            ed.on('pages-manager:ready', once);
+            ed.on('load', function () { setTimeout(once, 1500); });
+          }
+        })();
+
+      };
+      var _r2 = _code1({  }, { root: root, document: __doc, window: __win, params: params }) || {};
+      return function () {
+        __d.splice(0).forEach(function (f) { try { f(); } catch (e) {} });
+      };
+    } }
+  ];
+  function start(doc) {
+    var stops = [];
+    blueprints.forEach(function (b) {
+      try {
+        if (b.when && !doc.querySelector(b.when)) return;
+        var stop = b.run(doc, {});
+        if (typeof stop === 'function') stops.push(stop);
+      } catch (e) {
+        if (typeof console !== 'undefined') console.error('[blueprint ' + b.id + ']', e);
+      }
+    });
+    return function () { stops.splice(0).forEach(function (s) { try { s(); } catch (e) {} }); };
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { start(document); });
+  else start(document);
+})();
+</script>
+<script type="application/json" data-luna-darkreader>{"on":true,"src":"https://cdn.jsdelivr.net/npm/darkreader@4.9.135/darkreader.min.js","scheme":"light","generated":"dark","initial":"system","remember":true,"key":"gjs-theme","antiFlash":true,"flashBackground":"#111111","engine":"dynamic","filterCss":"","theme":{"mode":1,"brightness":100,"contrast":100,"sepia":0,"grayscale":0,"darkSchemeBackgroundColor":"#111111","darkSchemeTextColor":"#ffffff","lightSchemeBackgroundColor":"#ffffff","lightSchemeTextColor":"#111111","selectionColor":"auto","scrollbarColor":""},"fixes":{"url":["*"],"invert":[],"css":"","ignoreInlineStyle":[],"ignoreImageAnalysis":[],"disableStyleSheetsProxy":false}}</script>
 </body>
 </html>
